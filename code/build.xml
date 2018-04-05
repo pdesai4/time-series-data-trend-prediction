@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="dmproject" default="all">
+  
+  
+  <property file="build.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.zip"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.r_user_library.classpath"/>
+  
+  
+  <!-- Global Libraries -->
+  
+  <path id="library.r_skeletons.classpath">
+    <pathelement location="/Users/priyankadesai/Library/Caches/IdeaIC2017.1/r_skeletons/1481726564"/>
+  </path>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module DmProject -->
+  
+  <dirname property="module.dmproject.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.dmproject" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="dmproject.output.dir" value="${module.dmproject.basedir}/out/production/DmProject"/>
+  <property name="dmproject.testoutput.dir" value="${module.dmproject.basedir}/out/test/DmProject"/>
+  
+  <path id="dmproject.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="dmproject.module.production.classpath">
+    <pathelement location="${basedir}/libs/opencsv-3.9.jar"/>
+    <path refid="library.r_user_library.classpath"/>
+    <path refid="library.r_skeletons.classpath"/>
+  </path>
+  
+  <path id="dmproject.runtime.production.module.classpath">
+    <pathelement location="${dmproject.output.dir}"/>
+    <pathelement location="${basedir}/libs/opencsv-3.9.jar"/>
+    <path refid="library.r_user_library.classpath"/>
+    <path refid="library.r_skeletons.classpath"/>
+  </path>
+  
+  <path id="dmproject.module.classpath">
+    <pathelement location="${dmproject.output.dir}"/>
+    <pathelement location="${basedir}/libs/opencsv-3.9.jar"/>
+    <path refid="library.r_user_library.classpath"/>
+    <path refid="library.r_skeletons.classpath"/>
+  </path>
+  
+  <path id="dmproject.runtime.module.classpath">
+    <pathelement location="${dmproject.testoutput.dir}"/>
+    <pathelement location="${dmproject.output.dir}"/>
+    <pathelement location="${basedir}/libs/opencsv-3.9.jar"/>
+    <path refid="library.r_user_library.classpath"/>
+    <path refid="library.r_skeletons.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.dmproject">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.dmproject">
+    <patternset refid="excluded.from.module.dmproject"/>
+  </patternset>
+  
+  <path id="dmproject.module.sourcepath">
+    <dirset dir="${module.dmproject.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.dmproject" depends="compile.module.dmproject.production,compile.module.dmproject.tests" description="Compile module DmProject"/>
+  
+  <target name="compile.module.dmproject.production" description="Compile module DmProject; production classes">
+    <mkdir dir="${dmproject.output.dir}"/>
+    <javac destdir="${dmproject.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.dmproject}"/>
+      <bootclasspath refid="dmproject.module.bootclasspath"/>
+      <classpath refid="dmproject.module.production.classpath"/>
+      <src refid="dmproject.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.dmproject"/>
+    </javac>
+    
+    <copy todir="${dmproject.output.dir}">
+      <fileset dir="${module.dmproject.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.dmproject.tests" depends="compile.module.dmproject.production" description="compile module DmProject; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.dmproject" description="cleanup module">
+    <delete dir="${dmproject.output.dir}"/>
+    <delete dir="${dmproject.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.dmproject" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.dmproject" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.dmproject:jar" value="${basedir}/out/artifacts/DmProject_jar"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.DmProject.jar" value="${artifacts.temp.dir}/DmProject.jar"/>
+  </target>
+  
+  <target name="artifact.dmproject:jar" depends="init.artifacts, compile.module.dmproject" description="Build &#39;DmProject:jar&#39; artifact">
+    <property name="artifact.temp.output.dmproject:jar" value="${artifacts.temp.dir}/DmProject_jar"/>
+    <mkdir dir="${artifact.temp.output.dmproject:jar}"/>
+    <jar destfile="${temp.jar.path.DmProject.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${dmproject.output.dir}"/>
+      <zipfileset src="${basedir}/libs/opencsv-3.9.jar"/>
+    </jar>
+    <copy file="${temp.jar.path.DmProject.jar}" tofile="${artifact.temp.output.dmproject:jar}/DmProject.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.dmproject:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.dmproject:jar}"/>
+    <copy todir="${artifact.output.dmproject:jar}">
+      <fileset dir="${artifact.temp.output.dmproject:jar}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>
